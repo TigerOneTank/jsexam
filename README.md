@@ -19,6 +19,8 @@ Requires Git, Python 3 for the local server, and a modern browser. No build step
 ```sh
 git clone https://github.com/TigerOneTank/jsexam.git
 cd jsexam
+cp config.example.js config.local.js
+# Edit config.local.js and set your own restricted key.
 python -m http.server 8000 --bind 127.0.0.1
 ```
 
@@ -28,12 +30,17 @@ Open `http://127.0.0.1:8000/index.html`. On Windows, `py` can replace `python`. 
 
 Practices asynchronous requests, JSON data, form events, and DOM updates. The next step is handling incomplete responses and untrusted data.
 
-## Known limitations
+## Configuration and limitations
 
-- The renderer assumes at least seven results and available thumbnail metadata; empty or short responses can crash it.
-- API failures have no useful on-page error state, and queries are not encoded safely.
-- External API content is inserted with innerHTML instead of safe text rendering.
-- A Google API key is present in the current source and its duplicate repository. It must be restricted/rotated by the key owner; deleting a line does not revoke a key or remove it from history.
+- The key previously committed to this repository must be rotated by its owner. Removing it from source does not revoke it or remove it from Git history.
+- Copy `config.example.js` to `config.local.js` (on Windows, `copy` can replace `cp`). Restrict your key to the Books API and your website's HTTP referrers. Local configuration is ignored by Git, but a key used in browser JavaScript is still visible to visitors.
+- Search handles missing metadata, empty results, and request failures. API text is rendered as text rather than HTML. Only the latest search updates the page.
+- Results are limited to seven books. There is no pagination, offline mode, or backend.
+- No live API, browser compatibility, or visual regression test is claimed.
+
+## Tests
+
+With Node.js installed, run `node --test script.test.cjs`. Tests use a small DOM stub and mocked requests; no credentials or live network calls are used.
 
 ## Repository context
 
